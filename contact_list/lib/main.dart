@@ -1,6 +1,13 @@
+import 'package:contact_list/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MaterialApp(
+    home: HomePage(),
+    debugShowCheckedModeBanner: false,
+    theme: ThemeData(cursorColor: Colors.redAccent),
+  ));
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
