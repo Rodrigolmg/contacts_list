@@ -6,6 +6,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'contact_page.dart';
 
+enum OrderOptions {orderaz, orderza}
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -29,10 +31,17 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.more_vert),
-            onPressed: null,
-            color: Colors.white,
+          PopupMenuButton<OrderOptions>(
+            itemBuilder: (context) => <PopupMenuEntry<OrderOptions>>[
+              const PopupMenuItem<OrderOptions>(child: Text("Ordernar de A-Z"),
+                value: OrderOptions.orderaz,
+              ),
+              const PopupMenuItem<OrderOptions>(child: Text("Ordernar de Z-A"),
+                value: OrderOptions.orderza,
+              ),
+
+            ],
+            onSelected: _orderList,
           )
         ],
         title: Text("Contacts"),
@@ -72,6 +81,7 @@ class _HomePageState extends State<HomePage> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
+                    fit: BoxFit.cover,
                     image: contacts[index].img != null ?
                         FileImage(File(contacts[index].img)) :
                         AssetImage("images/contact_user.png")
@@ -133,6 +143,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       onPressed: (){
+                        Navigator.pop(context);
                         launch("tel:${contacts[index].phone}");
                       },
                     ),
@@ -140,7 +151,8 @@ class _HomePageState extends State<HomePage> {
                   Padding(
                     padding: EdgeInsets.all(10.0),
                     child: FlatButton(
-                      child: Text("Edit contact",
+                      child: Text(
+                        "Edit contact",
                         style: TextStyle(
                             color: Colors.redAccent,
                             fontSize: 20.0
@@ -199,6 +211,24 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         contacts = list;
       });
+    });
+  }
+
+  void _orderList(OrderOptions result){
+    switch(result){
+      case OrderOptions.orderaz:
+        contacts.sort((a, b) {
+          return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+        });
+        break;
+      case OrderOptions.orderza:
+        contacts.sort((a, b) {
+          return b.name.toLowerCase().compareTo(a.name.toLowerCase());
+        });
+        break;
+    }
+    setState(() {
+
     });
   }
 }
